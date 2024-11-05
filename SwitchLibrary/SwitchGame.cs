@@ -12,6 +12,8 @@ namespace SwitchLibrary
         private double gameSpace = 0.0;
         private bool isDigital = false;
 
+        private static List<SwitchGame> gameList = new List<SwitchGame>();
+
         public static string NameParameter = "Name";
         public static string PriceParameter = "Price";
         public static string SpaceParameter = "Space";
@@ -33,6 +35,8 @@ namespace SwitchLibrary
             Space = spaceValue;
 
             gameGoldPoints = CalculateGoldPoints(gamePrice);
+
+            gameList.Add(this);
         }
         #endregion
 
@@ -112,6 +116,11 @@ namespace SwitchLibrary
             }
         }
 
+        /// <summary>
+        /// A list of all instantiated Switch games.
+        /// </summary>
+        public static List<SwitchGame> List { get => gameList; }
+
         #endregion
 
         #region "Functions/Methods"
@@ -121,7 +130,8 @@ namespace SwitchLibrary
             return goldRate * price;
         }
 
-        public string GetGameInfo()
+        
+        public override string ToString()
         {
             return gameName + " (" + gameReleaseYear + ") - $" + gamePrice;
         }

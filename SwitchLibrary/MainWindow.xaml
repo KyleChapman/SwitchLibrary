@@ -61,11 +61,14 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
+                <ColumnDefinition/>
             </Grid.ColumnDefinitions>
 
             <Button x:Name="buttonAdd" Content="_Add Game" Grid.Column="0" Margin="5" MaxWidth="120" IsDefault="True" ToolTip="Click to validate and add the game to the list" Click="buttonAdd_Click"/>
             <Button x:Name="buttonReset" Content="_Reset Entry" Grid.Column="1" Margin="5" MaxWidth="120" Click="ResetClick" ToolTip="Click to clear all input controls"/>
-            <Button x:Name="buttonExit" Content="E_xit" Grid.Column="2" Margin="5" MaxWidth="120" Click="ExitClick" ToolTip="Click to exit the application"/>
+            <Button x:Name="buttonSave" Content="Sa_ve List" Grid.Column="2" Margin="5" MaxWidth="120" ToolTip="Click to save the list" Click="buttonSave_Click"/>
+
+            <Button x:Name="buttonExit" Content="E_xit" Grid.Column="3" Margin="5" MaxWidth="120" Click="ExitClick" ToolTip="Click to exit the application"/>
         </Grid>
 
     </DockPanel>

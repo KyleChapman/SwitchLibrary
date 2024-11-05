@@ -1,13 +1,10 @@
-﻿using System.Text;
+﻿using Microsoft.Win32;
+using System.IO;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace SwitchLibrary
 {
@@ -25,7 +22,10 @@ namespace SwitchLibrary
 
         private void ExitClick(object sender, RoutedEventArgs e)
         {
-            Close();
+            if (MessageBox.Show("Are you sure you want to exit? :(","Exit?",MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            {
+                Close();
+            }
         }
 
         private void ResetClick(object sender, RoutedEventArgs e)
@@ -56,7 +56,7 @@ namespace SwitchLibrary
                         // Everything is valid?
                         SwitchGame newGame = new SwitchGame(textName.Text, int.Parse(comboYear.Text), price, space);
 
-                        listGames.Items.Add(newGame.GetGameInfo());
+                        listGames.Items.Add(newGame.ToString());
                         textGoldPoints.Text = newGame.GoldPoints.ToString();
 
                         buttonAdd.IsEnabled = false;
@@ -120,6 +120,71 @@ namespace SwitchLibrary
             boxInError.SelectAll();
             boxInError.Focus();
             statusMessage.Content = message;
+        }
+
+        private void buttonSave_Click(object sender, RoutedEventArgs e)
+        {
+            SaveFileDialog saveDialog = new SaveFileDialog();
+            saveDialog.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
+
+            if (saveDialog.ShowDialog() == true)
+            {
+
+                FileStream myFile = new FileStream(saveDialog.FileName, FileMode.Create, FileAccess.Write);
+                StreamWriter writer = new StreamWriter(myFile);
+
+                //try
+                //{
+                //    for (int index = 0; index < SwitchGame.List.Count; index++)
+                //    {
+                //        writer.Write(SwitchGame.List[index].ToString() + "\n");
+                //    }
+                //}
+                //catch (IOException ex)
+                //{
+                //    MessageBox.Show("An error was encountered while trying to write the list to " + myFile.Name + ".\n" + ex.Message, "File Access Error");
+                //}
+                //catch (Exception ex)
+                //{
+                //    // Diplsya all available exception details.
+                //    MessageBox.Show("An unknown error has occurred. Please contact your IT service provider and provide the following information:" +
+                //        "\nMesssage: " + ex.Message +
+                //        "\nSource: " + ex.Source +
+                //        "\nType: " + ex.GetType() +
+                //        "\n\nStack Trace: " + ex.StackTrace, "Unknown Error");
+                //}
+                //finally
+                //{
+                //    writer.Close();
+                //}
+
+                try
+                {
+                    //for (int index = 0; index < SwitchGame.List.Count; index++)
+                    //{
+                        string jsonString = JsonSerializer.Serialize(SwitchGame.List);
+                        writer.WriteLine(jsonString);
+                    //}
+                }
+                catch (IOException ex)
+                {
+                    MessageBox.Show("An error was encountered while trying to write the list to " + myFile.Name + ".\n" + ex.Message, "File Access Error");
+                }
+                catch (Exception ex)
+                {
+                    // Diplsya all available exception details.
+                    MessageBox.Show("An unknown error has occurred. Please contact your IT service provider and provide the following information:" +
+                        "\nMesssage: " + ex.Message +
+                        "\nSource: " + ex.Source +
+                        "\nType: " + ex.GetType() +
+                        "\n\nStack Trace: " + ex.StackTrace, "Unknown Error");
+                }
+                finally
+                {
+                    writer.Close();
+                }
+
+            }
         }
     }
 }
