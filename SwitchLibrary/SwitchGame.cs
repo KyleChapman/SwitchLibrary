@@ -18,10 +18,9 @@ namespace SwitchLibrary
         // Instance variables.
         private string gameName = String.Empty;
         private int gameReleaseYear = DateTime.Today.Year;
-        private double gamePrice = 0.0;
-        private double gameGoldPoints = 0.0;
-        private double gameSpace = 0.0;
-        private bool isDigital = false;
+        private double gamePrice;
+        private double gameGoldPoints;
+        private double gameSpace;
 
         // A static List that contains all games created to date.
         private static List<SwitchGame> gameList = new List<SwitchGame>();
@@ -47,16 +46,17 @@ namespace SwitchLibrary
         /// <param name="yearValue">The year that the game was released</param>
         /// <param name="priceValue">The price paid for the game, or the MSRP (some interpretation can be used)</param>
         /// <param name="spaceValue">The amount of storage space the game requires</param>
-        public SwitchGame(string nameValue, int yearValue, double priceValue, double spaceValue)
+        public SwitchGame(string nameValue, int yearValue, double priceValue, double spaceValue, bool digitalValue)
         {
             // Set property values using properties so the validation is run.
             Name = nameValue;
             ReleaseYear = yearValue;
             Price = priceValue;
             Space = spaceValue;
+            IsDigital = digitalValue;
 
             // Calculate the gold points.
-            gameGoldPoints = CalculateGoldPoints(gamePrice);
+            gameGoldPoints = CalculateGoldPoints();
 
             // Add this game instance to the list.
             gameList.Add(this);
@@ -116,13 +116,7 @@ namespace SwitchLibrary
         /// <summary>
         /// A calculated value representing the gold points earned for purchasing the game.
         /// </summary>
-        public double GoldPoints
-        {
-            get
-            {
-                return gameGoldPoints;
-            }
-        }
+        public double GoldPoints { get => gameGoldPoints; }
 
         /// <summary>
         /// The space the game consumes in MB (for now..?).
@@ -147,6 +141,11 @@ namespace SwitchLibrary
         }
 
         /// <summary>
+        /// Is the game digital or not?
+        /// </summary>
+        public bool IsDigital { get; set; }
+
+        /// <summary>
         /// A list of all instantiated Switch games.
         /// </summary>
         public static List<SwitchGame> List { get => gameList; }
@@ -159,10 +158,21 @@ namespace SwitchLibrary
         /// </summary>
         /// <param name="price">The price paid for the game.</param>
         /// <returns>Gold points.</returns>
-        private int CalculateGoldPoints(double price)
+        private int CalculateGoldPoints()
         {
-            const double goldRate = 0.10;
-            return (int)Math.Round(goldRate * price, 0);
+            // Gold Point formula references https://my.nintendo.com/about_gold_point . 5% for digital, 1% for physical.
+            double goldRate;
+
+            if (!IsDigital)
+            {
+                goldRate = 1;
+            }
+            else
+            {
+                goldRate = 5;
+            }
+
+            return (int)Math.Round(goldRate * Price, 0);
         }
 
         /// <summary>
@@ -172,6 +182,15 @@ namespace SwitchLibrary
         public override string ToString()
         {
             return gameName + " (" + gameReleaseYear + ") - $" + gamePrice;
+        }
+
+        /// <summary>
+        /// A short string with the game's Title and release year.
+        /// </summary>
+        /// <returns>SwitchGame as a string, shorter than ToString()</returns>
+        public string Title()
+        {
+            return gameName + " (" + gameReleaseYear + ")";
         }
         #endregion
     }

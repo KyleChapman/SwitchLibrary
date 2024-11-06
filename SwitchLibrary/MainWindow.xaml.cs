@@ -32,6 +32,7 @@ namespace SwitchLibrary
             // After the form is initialized, populate the "release year" combobox.
             PopulateYears();
             ResetForm();
+            StatusMessage("Ready.");
         }
 
         /// <summary>
@@ -51,11 +52,12 @@ namespace SwitchLibrary
                     try
                     {
                         // Everything is valid? Create a SwitchGame object. Note that this may throw exceptions.
-                        SwitchGame newGame = new SwitchGame(textName.Text, int.Parse(comboYear.Text), price, space);
+                        SwitchGame newGame = new SwitchGame(textName.Text, int.Parse(comboYear.Text), price, space, checkIsDigital.IsChecked == true);
 
                         // Add the game's text to the ListView's Items property.
                         // There is another approach that we may change this to use in the near future.
                         listGames.Items.Add(newGame.ToString());
+                        StatusMessage("Added " + newGame.Title() + " successfully.");
                         // Display the game's Gold Points.
                         textGoldPoints.Text = newGame.GoldPoints.ToString();
 
@@ -263,6 +265,7 @@ namespace SwitchLibrary
             ResetColour(textSpace);
             comboYear.IsEnabled = true;
             checkIsDigital.IsEnabled = true;
+            buttonAdd.IsEnabled = true;
         }
 
         /// <summary>
